@@ -1,0 +1,15 @@
+{
+  "name": "dronahq",
+  "displayName": "DronaHQ",
+  "description": "Build and publish governed internal apps on your databases and APIs. Credentials, SSO, and permissions stay in DronaHQ.",
+  "version": "1.0.0",
+  "author": {
+    "name": "DronaHQ",
+    "email": "inquiries@dronahq.com"
+  },
+  "homepage": "https://www.dronahq.com",
+  "repository": "https://github.com/dronahq/dronahq-mcp",
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "keywords": ["internal-tools", "low-code", "database", "postgres", "rest-api", "governance", "sso"]
+}

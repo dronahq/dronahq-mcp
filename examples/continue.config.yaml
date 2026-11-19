@@ -1,0 +1,4 @@
+mcpServers:
+  - name: dronahq
+    type: streamable-http
+    url: https://studio.dronahq.com/api/vibe/mcp

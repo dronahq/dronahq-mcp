@@ -1,6 +1,14 @@
+<p align="center"><img src="assets/logo.svg" alt="DronaHQ" width="64" height="64"></p>
+
 # DronaHQ MCP
 
-Model Context Protocol (MCP) server that lets AI coding agents (Cursor, Claude, Claude Code, VS Code, Windsurf) build and ship internal tools on top of your existing infrastructure. Connector credentials never enter the agent's context, and the apps run inside your DronaHQ workspace.
+[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=dronahq&config=eyJ1cmwiOiJodHRwczovL3N0dWRpby5kcm9uYWhxLmNvbS9hcGkvdmliZS9tY3AifQ==)
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_DronaHQ_MCP-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=dronahq&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A//studio.dronahq.com/api/vibe/mcp%22%7D)
+[![Add to Claude](https://img.shields.io/badge/Claude-Add_DronaHQ_connector-D97757?style=flat-square&logo=claude&logoColor=white)](https://claude.ai/customize/connectors)
+
+The Cursor and VS Code buttons install the DronaHQ cloud server (`studio.dronahq.com`) in one click. Claude has no install link yet, so **Add to Claude** opens your connectors page. There, choose **Add → Add custom connector**, name it `DronaHQ`, paste `https://studio.dronahq.com/api/vibe/mcp`, then click **Add** and **Connect** ([full steps](docs/clients.md#claude-web-and-desktop)). If you're self-hosted, see [Quickstart](#quickstart) and use your own Studio host.
+
+Model Context Protocol (MCP) server that lets AI agents and coding assistants (Cursor, Claude, ChatGPT, VS Code, Codex, Gemini CLI, and any other MCP client) build and ship internal tools on top of your existing infrastructure. Connector credentials never enter the agent's context, and the apps run inside your DronaHQ workspace.
 
 Studio hosts the server. There is no local package to install. You add a server URL, sign in with your DronaHQ account, and the agent calls tools on that workspace.
 
@@ -19,8 +27,8 @@ DronaHQ MCP is the governed bridge. The agent receives schemas, saved operations
 ```
 ┌─────────────────────┐      MCP over HTTP (schemas, files,      ┌──────────────────────────┐
 │  AI coding agent    │      queries — no raw credentials)       │   DronaHQ MCP            │
-│ Cursor / Claude /   │ ◄──────────────────────────────────────► │   {studio}/api/vibe/mcp  │
-│ VS Code / Windsurf  │                                           └────────────┬─────────────┘
+│ Any MCP client:     │ ◄──────────────────────────────────────► │   {studio}/api/vibe/mcp  │
+│ IDE, CLI, or chat   │                                           └────────────┬─────────────┘
 └─────────────────────┘                                                        │
                                                                   Query runtime uses the
                                                                   connector stored in Studio
@@ -40,7 +48,7 @@ DronaHQ MCP is the governed bridge. The agent receives schemas, saved operations
 
 ## Quickstart
 
-Open Studio and go to **Connect DronaHQ MCP**. Copy the server URL, or use **Add to Cursor** / **Add to VS Code**. The snippets contain no token.
+Open Studio and go to **Connect DronaHQ MCP**. Copy the server URL, or use one of the one-click install buttons. The snippets contain no token.
 
 The URL looks like one of these:
 
@@ -53,65 +61,35 @@ On first use the client receives a sign-in challenge, opens the browser, and you
 
 For a self-hosted or VPC deployment, use that Studio host as the base URL. Tool calls then stay on your network.
 
-### Cursor
+### Pick your client
 
-**Add to Cursor** from the Studio drawer, or add this to `.cursor/mcp.json` in the project (or `~/.cursor/mcp.json`):
+Works with any MCP client that supports remote HTTP servers: Cursor, VS Code and GitHub Copilot, Claude, Claude Code, ChatGPT, OpenAI Codex, Gemini CLI, Windsurf, Zed, JetBrains IDEs, Kiro, Amazon Q Developer, Cline, Continue, Goose, OpenCode, and others. Clients that only run local servers can use the [`mcp-remote` bridge](docs/clients.md#any-other-client).
+
+Most clients only need the server name and URL:
 
 ```json
 {
   "mcpServers": {
     "dronahq": {
-      "url": "https://your-instance.dronahq.com/api/vibe/mcp"
+      "url": "https://studio.dronahq.com/api/vibe/mcp"
     }
   }
 }
 ```
 
-Cursor shows **Connect** next to the server. Click it and sign in.
-
-### Claude Code
+Config file locations and field names vary by client. Step-by-step setup for each one is in [docs/clients.md](docs/clients.md), and copy-paste configs are in [examples/](examples/).
 
 ```bash
-claude mcp add --transport http dronahq -s user "https://your-instance.dronahq.com/api/vibe/mcp"
+# Claude Code
+claude mcp add --transport http dronahq -s user "https://studio.dronahq.com/api/vibe/mcp"
+
+# OpenAI Codex (after adding the server to ~/.codex/config.toml)
+codex mcp login dronahq
 ```
-
-In Claude Code, run `/mcp`, pick this server, and choose **Authenticate**. The browser opens for sign-in.
-
-### Claude
-
-1. Open **Settings → Connectors**.
-2. Click **Add custom connector** and paste the server URL.
-3. Click **Connect** and sign in with your DronaHQ account.
-
-On Team and Enterprise plans, an owner may need to add the connector first.
-
-### VS Code
-
-Use **Add to VS Code** in the Studio drawer, or add a remote server with type `http` and the server URL. VS Code asks you to sign in when the server starts.
-
-### Windsurf
-
-Use **Open in Windsurf** in the Studio drawer, or add this to `~/.codeium/windsurf/mcp_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "dronahq": {
-      "serverUrl": "https://your-instance.dronahq.com/api/vibe/mcp"
-    }
-  }
-}
-```
-
-Sign in when Windsurf asks.
-
-### Any other HTTP client
-
-Add the server URL. Clients that implement MCP authorization discover DronaHQ sign-in from the `401` challenge. No API key goes in the client config.
 
 ## What the agent can do
 
-Tool names are what `tools/list` returns. Parameters are on each tool's input schema. Owners and admins can use every connector in the workspace. Creators only see connectors granted to them or their group, and they cannot add connectors or run raw queries that change data.
+The server exposes 64 tools. Names are what `tools/list` returns, and parameters are on each tool's input schema. [docs/tools.md](docs/tools.md) lists every tool and marks which ones are read-only. Owners and admins can use every connector in the workspace. Creators only see connectors granted to them or their group, and they cannot add connectors or run raw queries that change data.
 
 ### Apps
 
@@ -144,6 +122,7 @@ The agent never receives connection strings. New connectors are added in Studio 
 | `vibe_run_db_write` | Run one statement that changes data, or a raw NoSQL action. Owners and admins. |
 | `vibe_list_subcats` | List saved queries and operations on a connector. |
 | `vibe_get_subcat` | Read one saved operation, including its variables. |
+| `vibe_get_subcat_input_schema` | Return the fields needed to save an operation on a connector. |
 | `vibe_create_subcat` | Save a database query. |
 | `vibe_create_http_read_subcat` | Save a GET or HEAD operation on an HTTP connector. |
 | `vibe_create_http_write_subcat` | Save a POST, PUT, PATCH, or DELETE operation on an HTTP connector. |
@@ -166,6 +145,7 @@ Access is catalogues, groups, and per-app permissions in the workspace. SSO is h
 | `vibe_add_catalogue_groups` | Add groups to a catalogue. |
 | `vibe_set_catalogue_groups` | Replace the groups on a catalogue. |
 | `vibe_list_groups` | List end-user groups. |
+| `vibe_check_users` | Check whether email addresses already exist and can be invited. Owners and admins. |
 | `vibe_create_group` | Create an end-user group. |
 | `vibe_add_user_to_group` | Invite a user or add them to groups. |
 | `vibe_set_access` | Make a published app link public or private. |
@@ -174,7 +154,18 @@ Access is catalogues, groups, and per-app permissions in the workspace. SSO is h
 
 ### Automations
 
-`automation_list`, `automation_create`, `automation_get`, `automation_add_tasks`, `automation_update_task`, `automation_validate`, `automation_test_run`, `automation_publish`, and `automation_set_active` create and publish automations in the same workspace. `automation_test_run` skips tasks that change data. `automation_test_run_write` includes them.
+Twenty `automation_*` tools create, edit, test, and publish automations in the same workspace: list, create, get, rename, duplicate, delete, set the trigger, add, update, move, and remove tasks, validate, test, publish, and turn on or off.
+
+`automation_test_run` and `automation_test_task` skip tasks that change data. `automation_test_run_write` and `automation_test_task_write` include them. The full list is in [docs/tools.md](docs/tools.md#automations).
+
+## Agent instructions
+
+Both files give the agent the same guidance: never put secrets in source, read the schema before writing SQL, have app code call saved operations instead of raw SQL, and check in before publishing.
+
+| File | Use it in |
+|---|---|
+| [rules/AGENTS.md](rules/AGENTS.md) | Paste into your project's `AGENTS.md` (Codex, GitHub Copilot, Cursor, Zed, Gemini CLI, and others), `CLAUDE.md` (Claude Code), `GEMINI.md`, or `.github/copilot-instructions.md`. |
+| [rules/dronahq-vibe.mdc](rules/dronahq-vibe.mdc) | Copy into `.cursor/rules/`. |
 
 ## Security and governance
 
@@ -195,4 +186,21 @@ Once the client shows as connected:
 ## Further reading
 
 - [Getting started](https://docs.dronahq.com/building-dronahq-mcp/getting-started/)
-- Internal detail for this repo: [direct MCP endpoint](direct-mcp-server.md), [OAuth sign-in](vibe-mcp-oauth.md)
+- [Tool reference](docs/tools.md)
+- [Connect a client](docs/clients.md)
+- [Client config examples](examples/)
+
+## Support
+
+- Questions and bugs in these docs: [open an issue](https://github.com/dronahq/dronahq-mcp/issues).
+- Workspace or account help: inquiries@dronahq.com
+- Security reports: see [SECURITY.md](SECURITY.md).
+- [Privacy policy](https://www.dronahq.com/privacy/)
+
+## What's in this repository
+
+This repository holds documentation and client configuration. The server runs inside DronaHQ Studio, so there is no server code to build or install here. [server.json](server.json) describes the hosted server for the [official MCP Registry](https://registry.modelcontextprotocol.io), and [.cursor-plugin/](.cursor-plugin/) holds the Cursor plugin manifest.
+
+## License
+
+[MIT](LICENSE)

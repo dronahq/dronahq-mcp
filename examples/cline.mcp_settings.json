@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "dronahq": {
+      "type": "streamableHttp",
+      "url": "https://studio.dronahq.com/api/vibe/mcp"
+    }
+  }
+}

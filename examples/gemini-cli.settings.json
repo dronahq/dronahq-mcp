@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "dronahq": {
+      "httpUrl": "https://studio.dronahq.com/api/vibe/mcp"
+    }
+  }
+}

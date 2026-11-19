@@ -1,0 +1,7 @@
+{
+  "context_servers": {
+    "dronahq": {
+      "url": "https://studio.dronahq.com/api/vibe/mcp"
+    }
+  }
+}

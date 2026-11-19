@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.dronahq/dronahq-mcp",
+  "title": "DronaHQ",
+  "description": "Build and publish governed internal apps on your databases and APIs, without exposing credentials.",
+  "version": "1.0.0",
+  "websiteUrl": "https://github.com/dronahq/dronahq-mcp",
+  "repository": {
+    "url": "https://github.com/dronahq/dronahq-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://studio.dronahq.com/api/vibe/mcp"
+    }
+  ]
+}

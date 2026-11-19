@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "dronahq": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://studio.dronahq.com/api/vibe/mcp"]
+    }
+  }
+}

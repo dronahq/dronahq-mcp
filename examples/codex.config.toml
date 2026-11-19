@@ -1,0 +1,4 @@
+[mcp_servers.dronahq]
+url = "https://studio.dronahq.com/api/vibe/mcp"
+
+# Then run: codex mcp login dronahq
